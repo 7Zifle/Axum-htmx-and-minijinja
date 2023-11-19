@@ -28,18 +28,18 @@ type AppEngine = Engine<Environment<'static>>;
 
 #[derive(Serialize)]
 struct TestParameters {
-    names: Vec<String>,
+    todos: Vec<String>,
 }
 
 async fn get_test(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let mut names = state.names.lock().await;
-    names.push(String::from("New test"));
+    let mut todos = state.todos.lock().await;
+    todos.push(String::from("New test"));
 
     RenderHtml(
         "test.html",
         state.engine.clone(),
         TestParameters {
-            names: names.clone(),
+            todos: todos.clone(),
         },
     )
 }
@@ -52,27 +52,32 @@ async fn get_htmx_resp(State(state): State<Arc<AppState>>) -> impl IntoResponse 
     RenderHtml("htmx-resp.html", state.engine.clone(), {})
 }
 
+async fn get_page_home(State(state): State<Arc<AppState>>) -> impl IntoResponse {
+    RenderHtml("home-body.html", state.engine.clone(), {})
+}
+
 // Define your application shared state
 struct AppState {
     engine: AppEngine,
-    names: Mutex<Vec<String>>,
+    todos: Mutex<Vec<String>>,
 }
 
 #[tokio::main]
 async fn main() {
     let mut jinja = Environment::new();
-    let names = vec![String::from("test"), String::from("test2")];
+    let todos = vec![String::from("test"), String::from("test2")];
     jinja.set_loader(path_loader("templates/"));
 
     let shared_state = Arc::new(AppState {
         engine: Engine::from(jinja),
-        names: Mutex::new(names),
+        todos: Mutex::new(todos),
     });
 
     let app = Router::new()
+        .route("/api/htmx-test", get(get_htmx_resp))
         .route("/test", get(get_test))
         .route("/", get(get_index))
-        .route("/htmx-test", get(get_htmx_resp))
+        .route("/page/home", get(get_page_home))
         .nest_service("/assets", ServeDir::new("assets"))
         .with_state(shared_state.clone());
 
