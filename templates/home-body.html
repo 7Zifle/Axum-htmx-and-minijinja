@@ -1,5 +1,7 @@
-<h1>Test</h1>
-<button class="button" id="load-button" hx-get="/api/htmx-test" hx-target="#content">Load content</button>
-<div id="content" class="text-center">
-	click the button to load content
-</div>
+<h1>Todo list</h1>
+<div id="todos" hx-get="/api/todos" hx-trigger="load">Loading...</div>
+<form hx-post="/api/add-todo" hx-target="#todos" hx-on::after-request="this.reset()">
+	<input id="description" name="description" type="text" />
+	<button type="submit">Submit</button>
+</form>
+<p id="submit-result"></p>

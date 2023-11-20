@@ -1,9 +1,14 @@
 use std::sync::Arc;
 
-use axum::{extract::State, response::IntoResponse, routing::get, Router, Server};
+use axum::{
+    extract::State,
+    response::{Html, IntoResponse},
+    routing::{get, post},
+    Form, Json, Router, Server,
+};
 use axum_template::{engine::Engine, RenderHtml};
 use minijinja::{path_loader, Environment};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 use tower_http::services::ServeDir;
 
@@ -31,10 +36,8 @@ struct TestParameters {
     todos: Vec<String>,
 }
 
-async fn get_test(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let mut todos = state.todos.lock().await;
-    todos.push(String::from("New test"));
-
+async fn get_todos(State(state): State<Arc<AppState>>) -> impl IntoResponse {
+    let todos = state.todos.lock().await;
     RenderHtml(
         "test.html",
         state.engine.clone(),
@@ -56,6 +59,26 @@ async fn get_page_home(State(state): State<Arc<AppState>>) -> impl IntoResponse 
     RenderHtml("home-body.html", state.engine.clone(), {})
 }
 
+#[derive(Deserialize)]
+struct Todo {
+    description: String,
+}
+
+async fn post_todo(
+    State(state): State<Arc<AppState>>,
+    Form(payload): Form<Todo>,
+) -> impl IntoResponse {
+    let mut todos = state.todos.lock().await;
+    todos.push(payload.description);
+    RenderHtml(
+        "test.html",
+        state.engine.clone(),
+        TestParameters {
+            todos: todos.clone(),
+        },
+    )
+}
+
 // Define your application shared state
 struct AppState {
     engine: AppEngine,
@@ -75,9 +98,10 @@ async fn main() {
 
     let app = Router::new()
         .route("/api/htmx-test", get(get_htmx_resp))
-        .route("/test", get(get_test))
+        .route("/api/todos", get(get_todos))
         .route("/", get(get_index))
         .route("/page/home", get(get_page_home))
+        .route("/api/add-todo", post(post_todo))
         .nest_service("/assets", ServeDir::new("assets"))
         .with_state(shared_state.clone());
 
