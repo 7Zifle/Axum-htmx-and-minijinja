@@ -1,23 +1,13 @@
-<div
-	id="todos"
-	class="flex flex-nowrap m-8 overflow-x-auto fade-me-in"
-	hx-get="/api/todos"
-	hx-trigger="load, reloadTodos from:body"
->
-	Loading...
-</div>
-<div id="open-form" class="flex justify-center">
 	<div class="lg:w-6/12 border p-5">
 		<div class="px-4 sm:px-0">
-			<h3 class="text-base font-semibold leading-7 text-gray-900">TODO Form</h3>
+			<h3 class="text-base font-semibold leading-7 text-gray-900">Edit Form</h3>
 			<p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-				Use this form to add new todo items to the list
+				Use this form to edit  the todo item on the list
 			</p>
 		</div>
 		<form
-			hx-post="/api/add-todo"
-			hx-target="#todos"
-			hx-on::after-request="this.reset()"
+			hx-patch="/api/update/{{ id }}"
+			hx-swap="none"
 		>
 			<div class="mt-6 border-t border-gray-100 border-b">
 				<label
@@ -31,7 +21,7 @@
 						name="description"
 						rows="3"
 						class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-					></textarea>
+						>{{ name }}</textarea>
 				</div>
 				<p class="mt-3 text-sm leading-6 text-gray-600">
 					Give a good description to help you later
@@ -41,7 +31,7 @@
 				type="submit"
 				class="mt-3 right-0 items-center rounded-md bg-sky-500 hover:bg-sky-700 text-gray-50 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
 			>
-				Submit
+				Update
 			</button>
 			<button
 				type="reset"
@@ -51,4 +41,3 @@
 			</button>
 		</form>
 	</div>
-</div>

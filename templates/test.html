@@ -1,3 +1,37 @@
+<button
+	hx-get="/page/home"
+	hx-select="#open-form"
+	hx-target="#open-form"
+	hx-swap="outerHTML"
+	class="todo rounded-md border flex-none w-80 h-24 mr-5 mb-5 hover:bg-gray-100"
+>
+	<ion-icon size="large" name="add-outline"></ion-icon>
+</button>
 {% for todo in todos %}
-	<li>{{ todo }}</li>
+<div
+	class="todo rounded-md border flex-none w-80 h-24 mr-5 mb-5 fade-me-out fade-me-in"
+>
+	<p class="h-12">{{ todo.name }}</p>
+	<div
+		class="h-12 border-b rounded-md grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50"
+	>
+		<a
+			hx-get="/api/edit/{{ todo.id }}"
+			hx-target="#open-form"
+			class="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"
+		>
+			<ion-icon name="pencil-outline" size="medium"></ion-icon>
+			Edit
+		</a>
+		<a
+			hx-target="closest .todo"
+			hx-swap="outerHTML swap:0.2s"
+			hx-delete="/api/delete/{{ todo.id }}"
+			class="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"
+		>
+			<ion-icon name="trash-outline" size="medium"></ion-icon>
+			Delete
+		</a>
+	</div>
+</div>
 {% endfor %}
