@@ -17,6 +17,7 @@
 		<form
 			hx-post="/api/add-todo"
 			hx-target="#todos"
+			hx-swap="beforeend"
 			hx-on::after-request="this.reset()"
 		>
 			<div class="mt-6 border-t border-gray-100 border-b">

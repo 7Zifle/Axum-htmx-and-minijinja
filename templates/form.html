@@ -1,43 +1,46 @@
-	<div class="lg:w-6/12 border p-5">
-		<div class="px-4 sm:px-0">
-			<h3 class="text-base font-semibold leading-7 text-gray-900">Edit Form</h3>
-			<p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-				Use this form to edit  the todo item on the list
+<div class="lg:w-6/12 border p-5">
+	<div class="px-4 sm:px-0">
+		<h3 class="text-base font-semibold leading-7 text-gray-900">Edit Form</h3>
+		<p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+			Use this form to edit the todo item on the list
+		</p>
+	</div>
+	<form
+		hx-patch="/api/update/{{ uuid }}"
+		hx-target="#todo-{{ uuid }}"
+		hx-swap="outerHTML"
+	>
+		<div class="mt-6 border-t border-gray-100 border-b">
+			<label
+				for="description"
+				class="block text-sm font-medium leading-6 text-gray-900"
+				>Description</label
+			>
+			<div class="mt-2">
+				<textarea
+					id="description"
+					name="description"
+					rows="3"
+					class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+				>
+{{ name }}</textarea
+				>
+			</div>
+			<p class="mt-3 text-sm leading-6 text-gray-600">
+				Give a good description to help you later
 			</p>
 		</div>
-		<form
-			hx-patch="/api/update/{{ id }}"
-			hx-swap="none"
+		<button
+			type="submit"
+			class="mt-3 right-0 items-center rounded-md bg-sky-500 hover:bg-sky-700 text-gray-50 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
 		>
-			<div class="mt-6 border-t border-gray-100 border-b">
-				<label
-					for="description"
-					class="block text-sm font-medium leading-6 text-gray-900"
-					>Description</label
-				>
-				<div class="mt-2">
-					<textarea
-						id="description"
-						name="description"
-						rows="3"
-						class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-						>{{ name }}</textarea>
-				</div>
-				<p class="mt-3 text-sm leading-6 text-gray-600">
-					Give a good description to help you later
-				</p>
-			</div>
-			<button
-				type="submit"
-				class="mt-3 right-0 items-center rounded-md bg-sky-500 hover:bg-sky-700 text-gray-50 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-			>
-				Update
-			</button>
-			<button
-				type="reset"
-				class="mt-3 right-0 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-			>
-				Clear
-			</button>
-		</form>
-	</div>
+			Update
+		</button>
+		<button
+			type="reset"
+			class="mt-3 right-0 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
+		>
+			Clear
+		</button>
+	</form>
+</div>
